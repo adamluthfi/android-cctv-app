@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="220dp"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="#1A1D24">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Camera Preview -->
+        <ImageView
+            android:id="@+id/imgPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_camera_placeholder"/>
+
+        <!-- REC Badge -->
+        <TextView
+            android:id="@+id/tvRec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="● REC"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_rec"
+            android:padding="6dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="12dp"/>
+
+        <!-- Info Overlay -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:background="#AA000000">
+
+            <TextView
+                android:id="@+id/tvCameraName"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Main Entrance"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvCameraLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Building A - Floor 1"
+                android:textSize="12sp"
+                android:textColor="#CCCCCC"/>
+
+            <TextView
+                android:id="@+id/tvCameraStatus"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="● Online  •  #CAM001"
+                android:textSize="12sp"
+                android:textColor="#7CFF7C"/>
+        </LinearLayout>
+
+    </FrameLayout>
+</androidx.cardview.widget.CardView>
