@@ -2,4 +2,19 @@
 <resources>
 
     <style name="Theme.StreamApp" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+
+    <style name="TextAppearance" />
+
+    <style name="TextAppearance.BottomNavigationView" />
+
+    <style name="TextAppearance.BottomNavigationView.Inactive">
+        <item name="android:textSize">10sp</item>
+        <item name="text_color">@color/white</item>
+    </style>
+
+    <style name="TextAppearance.BottomNavigationView.Active">
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">bold</item>
+        <item name="text_color">@color/purple_500</item>
+    </style>
 </resources>

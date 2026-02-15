@@ -3,12 +3,16 @@
 
     <item
         android:id="@+id/menu_live"
-        android:icon="@drawable/ic_live"
+        android:icon="@drawable/nav_live_selector"
+        android:iconTint="@null"
+        android:textColor="@color/nav_item_color"
         android:title="Live" />
 
     <item
-        android:id="@+id/menu_alerts"
-        android:icon="@drawable/ic_menu_hamburger"
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/nav_menu_selector"
+        android:iconTint="@null"
+        android:textColor="@color/nav_item_color"
         android:title="Menu" />
 
 </menu>
