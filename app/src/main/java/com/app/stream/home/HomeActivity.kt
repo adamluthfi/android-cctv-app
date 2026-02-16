@@ -1,18 +1,21 @@
 package com.app.stream.home
 
+import android.content.Intent
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.stream.R
 import com.app.stream.adapter.CameraAdapter
 import com.app.stream.databinding.ActivityHomeBinding
+import com.app.stream.extension.startActivitySlideRight
 import com.app.stream.model.CameraModel
+import com.app.stream.settings.SettingsActivity
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 
 class HomeActivity : AppCompatActivity() {
 
@@ -34,6 +37,11 @@ class HomeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.bottomNav.selectedItemId = R.id.menu_live
     }
 
     private fun setupListCamera() {
@@ -105,6 +113,25 @@ class HomeActivity : AppCompatActivity() {
             if (drawable is AnimatedVectorDrawable) {
                 drawable.start()
                 isOpen = !isOpen
+            }
+        }
+        binding.bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.menu_live -> {
+                    Toast.makeText(this, "Main Live Streaming", Toast.LENGTH_SHORT).show()
+                    true
+                }
+
+                R.id.menu_settings -> {
+                    this@HomeActivity.startActivitySlideRight(
+                        Intent(
+                            applicationContext,
+                            SettingsActivity::class.java
+                        )
+                    )
+                    true
+                }
+                else -> false
             }
         }
     }
