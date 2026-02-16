@@ -11,11 +11,12 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="40dp"
         android:background="#0B0D12"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
         app:title="Settings"
         app:titleTextColor="@android:color/white"
-        app:navigationIcon="@drawable/ic_back"
+        app:navigationIcon="@drawable/ic_back_settings"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -84,22 +85,13 @@
                 android:layout_marginTop="24dp"/>
 
             <include layout="@layout/item_setting"
-                android:id="@+id/editUser"
-                app:icon="@android:drawable/ic_menu_edit"
-                app:title="Edit User"
-                app:subtitle="Add, delete, user"/>
+                android:id="@+id/editUser"/>
 
             <include layout="@layout/item_setting"
-                android:id="@+id/cameraSetting"
-                app:icon="@drawable/ic_camera"
-                app:title="Camera Settings"
-                app:subtitle="Quality and recording"/>
+                android:id="@+id/changePassword"/>
 
             <include layout="@layout/item_setting"
-                android:id="@+id/tnc"
-                app:icon="@drawable/ic_camera"
-                app:title="Security and Privacy"
-                app:subtitle="Password and access"/>
+                android:id="@+id/tnc"/>
         </LinearLayout>
     </ScrollView>
 
@@ -112,7 +104,7 @@
         android:textAllCaps="false"
         android:textColor="#FF5A5A"
         android:background="@drawable/bg_logout_button"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:icon="@drawable/ic_logout"
         app:iconTint="#FF5A5A"

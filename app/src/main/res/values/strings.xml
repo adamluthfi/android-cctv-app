@@ -5,7 +5,7 @@
     <string name="sign_in_to_access_your_cctv_cameras">Sign in to access your CCTV cameras</string>
     <string name="sign_in">Sign In</string>
     <string name="enter_your_password">Enter your password</string>
-    <string name="enter_your_email">Enter your email</string>
+    <string name="enter_your_userid">Enter your userID</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="admin">Admin</string>
     <string name="john_doe">John Doe</string>
