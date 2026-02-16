@@ -12,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.app.stream.R
 import com.app.stream.databinding.ActivityStreamBinding
 import com.app.stream.home.HomeActivity
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class StreamActivity : AppCompatActivity() {
 
@@ -24,7 +26,7 @@ class StreamActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
         configButton()
-        setupTextInput()
+        setupEditText()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -52,8 +54,13 @@ class StreamActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupTextInput() {
-        binding.tietUserId.addTextChangedListener(object : TextWatcher {
+    private fun setupEditText() {
+        setupTextInput(binding.tiluserID, binding.tietUserId)
+        setupTextInput(binding.tilPassword, binding.tiePassword)
+    }
+
+    private fun setupTextInput(textInputLayout: TextInputLayout, textInputEditText: TextInputEditText) {
+        textInputEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
 
             override fun beforeTextChanged(
@@ -69,29 +76,8 @@ class StreamActivity : AppCompatActivity() {
                 p2: Int,
                 p3: Int
             ) {
-                binding.tiluserID.boxStrokeColor = getColor(R.color.purple_500)
-                binding.tiluserID.error = null
-            }
-        })
-
-        binding.tiePassword.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-
-            override fun beforeTextChanged(
-                p0: CharSequence?,
-                p1: Int,
-                p2: Int,
-                p3: Int
-            ) {}
-
-            override fun onTextChanged(
-                p0: CharSequence?,
-                p1: Int,
-                p2: Int,
-                p3: Int
-            ) {
-                binding.tilPassword.boxStrokeColor = getColor(R.color.purple_500)
-                binding.tilPassword.error = null
+                textInputLayout.boxStrokeColor = getColor(R.color.purple_500)
+                textInputLayout.error = null
             }
         })
     }
