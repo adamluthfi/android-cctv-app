@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#0d0F14"
     android:padding="32dp"
-    tools:context=".main.StreamActivity">
+    tools:context=".module.main.StreamActivity">
 
     <!-- app icon -->
     <ImageView
