@@ -62,6 +62,7 @@ class StreamActivity : AppCompatActivity() {
                         }
                     }
                     is ApiResult.Error -> {
+                        binding.btnSignIn.hideLoading("SIGN IN")
                         Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -87,7 +88,14 @@ class StreamActivity : AppCompatActivity() {
             } else {
                 binding.tiluserID.error = null
                 binding.tilPassword.error = null
-                viewmodel.login(binding.tietUserId.text.toString(), binding.tiePassword.text.toString())
+               // viewmodel.login(binding.tietUserId.text.toString(), binding.tiePassword.text.toString())
+                this@StreamActivity.startActivity(
+                    Intent(
+                        applicationContext,
+                        HomeActivity::class.java
+                    )
+                )
+                this@StreamActivity.finish()
             }
         }
     }

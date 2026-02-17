@@ -13,6 +13,7 @@ import com.app.stream.R
 import com.app.stream.common.adapter.CameraAdapter
 import com.app.stream.databinding.ActivityHomeBinding
 import com.app.stream.common.extension.startActivitySlideRight
+import com.app.stream.module.cctv.CctvActivity
 import com.app.stream.remote.model.CameraModel
 import com.app.stream.module.settings.SettingsActivity
 
@@ -96,8 +97,9 @@ class HomeActivity : AppCompatActivity() {
         )
 
         val adapter = CameraAdapter(cameras) { camera ->
-            Toast.makeText(this, "Open ${camera.name}", Toast.LENGTH_SHORT).show()
-            // navigate to detail / live stream
+            this@HomeActivity.startActivitySlideRight(
+                Intent(applicationContext, CctvActivity::class.java)
+            )
         }
 
         binding.rvCameras.apply {
