@@ -1,16 +1,17 @@
 package com.app.stream.module.home
 
 import android.content.Intent
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.stream.R
 import com.app.stream.common.adapter.CameraAdapter
+import com.app.stream.common.extension.GridSpacingItemDecoration
 import com.app.stream.databinding.ActivityHomeBinding
 import com.app.stream.common.extension.startActivitySlideRight
 import com.app.stream.module.cctv.CctvActivity
@@ -24,6 +25,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private var isOpen = false
+    private var isGrid = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +47,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupListCamera() {
+        val spanCount = 2
+        val spacing = resources.getDimensionPixelSize(R.dimen.grid_spacing)
+
         val cameras = listOf(
             CameraModel(
                 id = "CAM001",
@@ -104,17 +109,26 @@ class HomeActivity : AppCompatActivity() {
 
         binding.rvCameras.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
+            addItemDecoration(
+                GridSpacingItemDecoration(spanCount, spacing, true)
+            )
             this.adapter = adapter
         }
     }
 
-    private fun setupButton() {
-        binding.toolbar.btnMenu.setOnClickListener {
-            val drawable = binding.toolbar.btnMenu.drawable
-            if (drawable is AnimatedVectorDrawable) {
-                drawable.start()
-                isOpen = !isOpen
+    fun switchLayout() {
+        isGrid = !isGrid
+        binding.rvCameras.layoutManager =
+            if (isGrid) {
+                GridLayoutManager(this, 2)
+            } else {
+                LinearLayoutManager(this)
             }
+    }
+
+    private fun setupButton() {
+        binding.toolbar.btnGrid.setOnClickListener {
+            switchLayout()
         }
         binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {

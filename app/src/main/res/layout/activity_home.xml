@@ -68,6 +68,8 @@
         android:id="@+id/rvCameras"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:paddingVertical="16dp"
         android:paddingHorizontal="16dp"
         app:layout_constraintTop_toBottomOf="@id/cardLive"
         app:layout_constraintBottom_toTopOf="@id/bottomNav"
