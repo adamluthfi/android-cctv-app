@@ -1,6 +1,7 @@
 package com.app.stream.common
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -10,38 +11,34 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore by preferencesDataStore(name = "session")
 
 class SessionManager(private val context: Context) {
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
     companion object {
-        private val ACCESS_TOKEN = stringPreferencesKey("access_token")
-        private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        private const val KEY_ACCESS_TOKEN = "access_token"
+        private const val KEY_REFRESH_TOKEN = "refresh_token"
     }
 
-    // Save tokens
-    suspend fun saveToken(
-        accessToken: String,
-        refreshToken: String
-    ) {
-        context.dataStore.edit { prefs ->
-            prefs[ACCESS_TOKEN] = accessToken
-            prefs[REFRESH_TOKEN] = refreshToken
-        }
+    // 🔥 SAVE TOKEN
+    fun saveToken(accessToken: String, refreshToken: String) {
+        prefs.edit()
+            .putString(KEY_ACCESS_TOKEN, accessToken)
+            .putString(KEY_REFRESH_TOKEN, refreshToken)
+            .apply()
     }
 
-    // Get access token
-    val accessToken: Flow<String?> =
-        context.dataStore.data.map { prefs ->
-            prefs[ACCESS_TOKEN]
-        }
+    // 🔥 GET TOKEN
+    fun getAccessToken(): String? {
+        return prefs.getString(KEY_ACCESS_TOKEN, null)
+    }
 
-    // Get refresh token
-    val refreshToken: Flow<String?> =
-        context.dataStore.data.map { prefs ->
-            prefs[REFRESH_TOKEN]
-        }
+    fun getRefreshToken(): String? {
+        return prefs.getString(KEY_REFRESH_TOKEN, null)
+    }
 
-    // Clear session (logout)
-    suspend fun clearSession() {
-        context.dataStore.edit { it.clear() }
+    // 🔥 CLEAR
+    fun clear() {
+        prefs.edit().clear().apply()
     }
 }
 

@@ -17,6 +17,7 @@ okhttp = "4.12.0"
 coroutines = "1.8.1"
 datastore = "1.1.1"
 viewmodel = "2.8.6"
+exoplayer = "1.9.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,9 @@ kotlinx-coroutines = {group = "org.jetbrains.kotlinx", name = "kotlinx-coroutine
 androidx-datastore = {group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
 androidx-lifecycle-viewmodel = {group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "viewmodel"}
 androidx-lifecycle-runtime = {group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "viewmodel"}
+androidx-media-exoplayer = {group = "androidx.media3", name = "media3-exoplayer-hls", version.ref = "exoplayer"}
+androidx-media-exoplayer-dash = {group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "exoplayer"}
+androidx-media-ui = {group = "androidx.media3", name = "media3-ui", version.ref = "exoplayer"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

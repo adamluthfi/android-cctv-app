@@ -3,17 +3,23 @@ package com.app.stream.module.cctv
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.stream.R
+import com.app.stream.common.SessionManager
 import com.app.stream.common.adapter.CameraAdapter
 import com.app.stream.common.extension.startActivitySlideRight
 import com.app.stream.databinding.ActivityCctvBinding
+import com.app.stream.module.cctv.viewmodel.CctvViewModel
 import com.app.stream.module.detail.DetailActivity
-import com.app.stream.remote.model.CameraModel
+import com.app.stream.module.home.viewmodel.HomeViewModel
+import com.app.stream.remote.ApiResult
+import com.app.stream.remote.model.Camera
+import com.app.stream.remote.model.CameraResponse
 
 class CctvActivity : AppCompatActivity() {
 
@@ -21,6 +27,7 @@ class CctvActivity : AppCompatActivity() {
         ActivityCctvBinding.inflate(layoutInflater)
     }
 
+    private val viewmodel = CctvViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,7 +35,11 @@ class CctvActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         setupButton()
-        setupListCamera()
+        viewmodel.cameras(
+            SessionManager(this).getAccessToken().toString(),
+            Intent().getLongExtra("channel_id",1)
+        )
+        fetchCamera()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -50,60 +61,31 @@ class CctvActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupListCamera() {
-        val cameras = listOf(
-            CameraModel(
-                id = "CAM001",
-                name = "Main Entrance",
-                location = "Building A - Floor 1",
-                isOnline = true,
-                isRecording = true,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM002",
-                name = "Parking Area",
-                location = "Basement",
-                isOnline = false,
-                isRecording = false,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM001",
-                name = "Main Entrance",
-                location = "Building A - Floor 1",
-                isOnline = true,
-                isRecording = true,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM002",
-                name = "Parking Area",
-                location = "Basement",
-                isOnline = false,
-                isRecording = false,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM001",
-                name = "Main Entrance",
-                location = "Building A - Floor 1",
-                isOnline = true,
-                isRecording = true,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM002",
-                name = "Parking Area",
-                location = "Basement",
-                isOnline = false,
-                isRecording = false,
-                previewRes = R.drawable.img_camera_placeholder
-            )
-        )
+    private fun fetchCamera() {
+        viewmodel.cctvState
+            .observe(this@CctvActivity) {
+                when (it) {
+                    is ApiResult.Loading -> {}
+                    is ApiResult.Success -> {
+                        it.data.data
+                        setupListCamera(it.data.data)
+                    }
+                    is ApiResult.Error -> {
+                        Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+    }
+
+    private fun setupListCamera(cameras: List<Camera>?) {
 
         val adapter = CameraAdapter(cameras) { camera ->
-            this@CctvActivity.startActivitySlideRight(Intent(applicationContext, DetailActivity::class.java))
+            this@CctvActivity
+                .startActivitySlideRight(
+                    Intent(applicationContext,
+                        DetailActivity::class.java)
+                        .putExtra("camera_url",camera.url)
+                )
         }
 
         binding.rvCCTV.apply {

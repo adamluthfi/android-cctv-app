@@ -7,16 +7,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.stream.R
-import com.app.stream.common.adapter.CameraAdapter
-import com.app.stream.common.extension.GridSpacingItemDecoration
+import com.app.stream.common.SessionManager
+import com.app.stream.common.adapter.LocationAdapter
 import com.app.stream.databinding.ActivityHomeBinding
 import com.app.stream.common.extension.startActivitySlideRight
 import com.app.stream.module.cctv.CctvActivity
-import com.app.stream.remote.model.CameraModel
+import com.app.stream.module.home.viewmodel.HomeViewModel
 import com.app.stream.module.settings.SettingsActivity
+import com.app.stream.remote.ApiResult
+import com.app.stream.remote.model.ChannelCameraResponse
 
 class HomeActivity : AppCompatActivity() {
 
@@ -24,16 +25,14 @@ class HomeActivity : AppCompatActivity() {
         ActivityHomeBinding.inflate(layoutInflater)
     }
 
-    private var isOpen = false
-    private var isGrid = false
+    private val viewmodel = HomeViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
         setupButton()
-        setupListCamera()
-
+        viewmodel.channels(SessionManager(this).getAccessToken().toString())
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -46,94 +45,38 @@ class HomeActivity : AppCompatActivity() {
         binding.bottomNav.selectedItemId = R.id.menu_live
     }
 
-    private fun setupListCamera() {
-        val spanCount = 2
-        val spacing = resources.getDimensionPixelSize(R.dimen.grid_spacing)
+    private fun setupListCamera(channels: List<ChannelCameraResponse>?) {
 
-        val cameras = listOf(
-            CameraModel(
-                id = "CAM001",
-                name = "Main Entrance",
-                location = "Building A - Floor 1",
-                isOnline = true,
-                isRecording = true,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM002",
-                name = "Parking Area",
-                location = "Basement",
-                isOnline = false,
-                isRecording = false,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM001",
-                name = "Main Entrance",
-                location = "Building A - Floor 1",
-                isOnline = true,
-                isRecording = true,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM002",
-                name = "Parking Area",
-                location = "Basement",
-                isOnline = false,
-                isRecording = false,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM001",
-                name = "Main Entrance",
-                location = "Building A - Floor 1",
-                isOnline = true,
-                isRecording = true,
-                previewRes = R.drawable.img_camera_placeholder
-            ),
-            CameraModel(
-                id = "CAM002",
-                name = "Parking Area",
-                location = "Basement",
-                isOnline = false,
-                isRecording = false,
-                previewRes = R.drawable.img_camera_placeholder
-            )
-        )
-
-        val adapter = CameraAdapter(cameras) { camera ->
+        val adapter = LocationAdapter(channels) { camera ->
             this@HomeActivity.startActivitySlideRight(
                 Intent(applicationContext, CctvActivity::class.java)
+                    .putExtra("channel_id", camera.id)
             )
         }
 
         binding.rvCameras.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
-            addItemDecoration(
-                GridSpacingItemDecoration(spanCount, spacing, true)
-            )
             this.adapter = adapter
         }
     }
 
-    fun switchLayout() {
-        isGrid = !isGrid
-        binding.rvCameras.layoutManager =
-            if (isGrid) {
-                GridLayoutManager(this, 2)
-            } else {
-                LinearLayoutManager(this)
+    private fun fetchCamera() {
+        viewmodel.homeState
+            .observe(this@HomeActivity) {
+                when (it) {
+                    is ApiResult.Loading -> {}
+                    is ApiResult.Success -> { setupListCamera(it.data.data) }
+                    is ApiResult.Error -> {
+                        Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
     }
-
     private fun setupButton() {
-        binding.toolbar.btnGrid.setOnClickListener {
-            switchLayout()
-        }
         binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.menu_live -> {
-                    Toast.makeText(this, "Main Live Streaming", Toast.LENGTH_SHORT).show()
+                    fetchCamera()
                     true
                 }
 

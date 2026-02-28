@@ -11,12 +11,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.app.stream.R
+import com.app.stream.common.SessionManager
 import com.app.stream.common.extension.hideLoading
 import com.app.stream.common.extension.showLoading
 import com.app.stream.databinding.ActivityStreamBinding
 import com.app.stream.module.home.HomeActivity
 import com.app.stream.remote.ApiResult
 import com.app.stream.module.main.viewmodel.StreamViewModel
+import com.app.stream.remote.NetworkModule
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.delay
@@ -29,6 +31,7 @@ class StreamActivity : AppCompatActivity() {
     }
 
     private val viewmodel = StreamViewModel()
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +39,7 @@ class StreamActivity : AppCompatActivity() {
         setContentView(binding.root)
         configButton()
         setupEditText()
+        sessionManager = SessionManager(this)
 
         viewmodel
             .loginState
@@ -59,6 +63,7 @@ class StreamActivity : AppCompatActivity() {
                                 )
                             )
                             this@StreamActivity.finish()
+                            sessionManager.saveToken(it.data.data?.accessToken.toString(), "")
                         }
                     }
                     is ApiResult.Error -> {
@@ -88,14 +93,7 @@ class StreamActivity : AppCompatActivity() {
             } else {
                 binding.tiluserID.error = null
                 binding.tilPassword.error = null
-               // viewmodel.login(binding.tietUserId.text.toString(), binding.tiePassword.text.toString())
-                this@StreamActivity.startActivity(
-                    Intent(
-                        applicationContext,
-                        HomeActivity::class.java
-                    )
-                )
-                this@StreamActivity.finish()
+                viewmodel.login(binding.tietUserId.text.toString(), binding.tiePassword.text.toString())
             }
         }
     }

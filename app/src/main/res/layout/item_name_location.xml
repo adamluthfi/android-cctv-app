@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="#1A1D24">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- Info Overlay -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:background="#1A1D24">
+
+            <TextView
+                android:id="@+id/tvLocationName"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Main Entrance"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvCameraCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Building A - Floor 1"
+                android:textSize="12sp"
+                android:textColor="#CCCCCC"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+</androidx.cardview.widget.CardView>
