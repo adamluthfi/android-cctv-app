@@ -1,9 +1,7 @@
 package com.app.stream.remote.model
 
 data class Channel(
-    val id: Long?,
-    val name: String?,
-    val cameras: List<Camera>?,
+    val id: Long?
 )
 
 data class ChannelResponse(

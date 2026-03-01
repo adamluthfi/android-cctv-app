@@ -37,7 +37,7 @@ class CctvActivity : AppCompatActivity() {
         setupButton()
         viewmodel.cameras(
             SessionManager(this).getAccessToken().toString(),
-            Intent().getLongExtra("channel_id",1)
+            intent.getLongExtra("channel_id",0)
         )
         fetchCamera()
 

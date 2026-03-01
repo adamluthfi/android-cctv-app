@@ -30,7 +30,6 @@ class DetailActivity : AppCompatActivity() {
         enableEdgeToEdge()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         setContentView(binding.root)
-        Toast.makeText(this, Intent().getStringExtra("camera_url").toString(), Toast.LENGTH_SHORT).show()
         setupLiveStream()
         setupButton()
 
@@ -61,7 +60,7 @@ class DetailActivity : AppCompatActivity() {
             .build()
         playerView.player = player
 
-        val mediaStream = MediaItem.fromUri(Intent().getStringExtra("camera_url").toString())
+        val mediaStream = MediaItem.fromUri(intent.getStringExtra("camera_url").toString())
         player.setMediaItem(mediaStream)
         player.playWhenReady = true
         player.prepare()

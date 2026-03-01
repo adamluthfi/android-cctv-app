@@ -43,6 +43,7 @@ interface ApiService {
 
     @POST("users")
     suspend fun createUser(
+        @Header("Authorization") token: String,
         @Body request: User
     ): UserApiResponse
 

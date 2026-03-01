@@ -1,7 +1,6 @@
 package com.app.stream.remote.model
 
 data class UserResponse(
-    val id: Long?,
     val username: String?,
     val enabled: Boolean?,
     val createdBy: String?,
@@ -18,11 +17,9 @@ data class UpdateUserRequest(
 )
 
 data class User(
-    val id: Long?,
     val username: String?,
     val password: String?,
     val enabled: Boolean?,
-    val role: Role?,
     val channels: List<Channel>?
 )
 

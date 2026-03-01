@@ -18,6 +18,8 @@ import com.app.stream.module.home.viewmodel.HomeViewModel
 import com.app.stream.module.settings.SettingsActivity
 import com.app.stream.remote.ApiResult
 import com.app.stream.remote.model.ChannelCameraResponse
+import com.app.stream.ui.common.loading.LoadingController
+import com.app.stream.ui.common.loading.LoadingManager
 
 class HomeActivity : AppCompatActivity() {
 
@@ -26,11 +28,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private val viewmodel = HomeViewModel()
+    private lateinit var loadingController: LoadingController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
+        loadingController = LoadingManager(supportFragmentManager)
         setupButton()
         viewmodel.channels(SessionManager(this).getAccessToken().toString())
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -43,6 +47,11 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.bottomNav.selectedItemId = R.id.menu_live
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadingController.hide()
     }
 
     private fun setupListCamera(channels: List<ChannelCameraResponse>?) {
@@ -64,9 +73,15 @@ class HomeActivity : AppCompatActivity() {
         viewmodel.homeState
             .observe(this@HomeActivity) {
                 when (it) {
-                    is ApiResult.Loading -> {}
-                    is ApiResult.Success -> { setupListCamera(it.data.data) }
+                    is ApiResult.Loading -> {
+                        loadingController.show("Loading...")
+                    }
+                    is ApiResult.Success -> {
+                        loadingController.hide()
+                        setupListCamera(it.data.data)
+                    }
                     is ApiResult.Error -> {
+                        loadingController.hide()
                         Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
