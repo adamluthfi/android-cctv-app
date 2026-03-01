@@ -14,6 +14,8 @@ import com.app.stream.R
 import com.app.stream.common.SessionManager
 import com.app.stream.common.extension.hideLoading
 import com.app.stream.common.extension.showLoading
+import com.app.stream.ui.common.loading.LoadingController
+import com.app.stream.ui.common.loading.LoadingManager
 import com.app.stream.databinding.ActivityStreamBinding
 import com.app.stream.module.home.HomeActivity
 import com.app.stream.remote.ApiResult
@@ -32,6 +34,7 @@ class StreamActivity : AppCompatActivity() {
 
     private val viewmodel = StreamViewModel()
     private lateinit var sessionManager: SessionManager
+    private lateinit var loadingController: LoadingController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,7 @@ class StreamActivity : AppCompatActivity() {
         configButton()
         setupEditText()
         sessionManager = SessionManager(this)
+        loadingController = LoadingManager(supportFragmentManager)
 
         viewmodel
             .loginState
@@ -51,11 +55,13 @@ class StreamActivity : AppCompatActivity() {
                             .alpha(0.85f)
                             .setDuration(150)
                             .start()
+                        loadingController.show(getString(R.string.loading_default))
                     }
                     is ApiResult.Success -> {
                         lifecycleScope.launch {
                             delay(200)
                             binding.btnSignIn.hideLoading("SIGN IN")
+                            loadingController.hide()
                             this@StreamActivity.startActivity(
                                 Intent(
                                     applicationContext,
@@ -68,6 +74,7 @@ class StreamActivity : AppCompatActivity() {
                     }
                     is ApiResult.Error -> {
                         binding.btnSignIn.hideLoading("SIGN IN")
+                        loadingController.hide()
                         Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -78,6 +85,12 @@ class StreamActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+
+    override fun onDestroy() {
+        loadingController.hide()
+        super.onDestroy()
     }
 
     private fun configButton() {

@@ -10,4 +10,5 @@
     <string name="admin">Admin</string>
     <string name="john_doe">John Doe</string>
     <string name="logout">Logout</string>
+    <string name="loading_default">Loading...</string>
 </resources>
