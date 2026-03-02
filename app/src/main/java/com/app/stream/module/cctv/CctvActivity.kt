@@ -8,6 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.stream.R
 import com.app.stream.common.SessionManager
@@ -22,6 +25,9 @@ import com.app.stream.remote.model.Camera
 import com.app.stream.remote.model.CameraResponse
 
 class CctvActivity : AppCompatActivity() {
+
+    private lateinit var player: ExoPlayer
+    private lateinit var playerView: PlayerView
 
     private val binding: ActivityCctvBinding by lazy {
         ActivityCctvBinding.inflate(layoutInflater)
@@ -61,6 +67,11 @@ class CctvActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        player.release()
+    }
+
     private fun fetchCamera() {
         viewmodel.cctvState
             .observe(this@CctvActivity) {
@@ -69,6 +80,8 @@ class CctvActivity : AppCompatActivity() {
                     is ApiResult.Success -> {
                         it.data.data
                         setupListCamera(it.data.data)
+                        val url = it.data.data?.first()?.url
+                        url?.let { it1 -> setupLiveStream(it1) }
                     }
                     is ApiResult.Error -> {
                         Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
@@ -80,17 +93,26 @@ class CctvActivity : AppCompatActivity() {
     private fun setupListCamera(cameras: List<Camera>?) {
 
         val adapter = CameraAdapter(cameras) { camera ->
-            this@CctvActivity
-                .startActivitySlideRight(
-                    Intent(applicationContext,
-                        DetailActivity::class.java)
-                        .putExtra("camera_url",camera.url)
-                )
+            camera.url?.let { setupLiveStream(it) }
         }
 
         binding.rvCCTV.apply {
             layoutManager = LinearLayoutManager(this@CctvActivity)
             this.adapter = adapter
         }
+    }
+
+    private fun setupLiveStream(url: String) {
+        playerView = binding.playerPreview
+        player = ExoPlayer
+            .Builder(this)
+            .build()
+        playerView.player = player
+
+        val mediaStream = MediaItem.fromUri(url)
+        player.setMediaItem(mediaStream)
+        player.playWhenReady = true
+        player.prepare()
+
     }
 }

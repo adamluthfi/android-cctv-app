@@ -29,8 +29,6 @@ class CameraAdapter(
 //                tvCameraStatus.setTextColor(Color.parseColor("#FF6B6B"))
 //            }
 
-            // Preview image
-            imgPreview.setImageResource(R.drawable.img_camera_placeholder)
 
             // REC badge
             //tvRec.visibility = if (item.isRecording) View.VISIBLE else View.GONE
