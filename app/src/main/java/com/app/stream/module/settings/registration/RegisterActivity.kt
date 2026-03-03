@@ -12,17 +12,16 @@ import androidx.core.view.WindowInsetsCompat
 import com.app.stream.R
 import com.app.stream.common.SessionManager
 import com.app.stream.databinding.ActivityRegisterBinding
-import com.app.stream.module.home.viewmodel.HomeViewModel
 import com.app.stream.module.settings.registration.viewmodel.RegistrationViewModel
 import com.app.stream.remote.ApiResult
 import com.app.stream.remote.model.Channel
 import com.app.stream.remote.model.ChannelCameraResponse
+import com.app.stream.remote.model.Role
 import com.app.stream.remote.model.User
 import com.app.stream.ui.common.loading.LoadingController
 import com.app.stream.ui.common.loading.LoadingManager
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import okhttp3.internal.wait
 import kotlin.getValue
 
 class RegisterActivity : AppCompatActivity() {
@@ -31,7 +30,9 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private val viewmodel = RegistrationViewModel()
-    private val channel = mutableListOf<Channel>()
+    private val channel = mutableListOf<Long>()
+    private var roleID: Long? = null
+
     private lateinit var loadingController: LoadingController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,7 @@ class RegisterActivity : AppCompatActivity() {
         setupButton()
         setupEditText()
         setListDropDown()
+        setupRole()
 
         viewmodel.registrationState
             .observe(this@RegisterActivity) { it ->
@@ -101,17 +103,22 @@ class RegisterActivity : AppCompatActivity() {
                 binding.tilrepassword.boxStrokeColor = getColor(R.color.maroon)
                 return@setOnClickListener
             } else if (binding.dropdownRole.text.isEmpty()) {
-                binding.tildropdown.error = "channel is required"
-                binding.tildropdown.boxStrokeColor = getColor(R.color.maroon)
+                binding.tildropdownRole.error = "Role is required"
+                binding.tildropdownRole.boxStrokeColor = getColor(R.color.maroon)
+                return@setOnClickListener
+            } else if (binding.dropdownChannel.text.isEmpty()) {
+                binding.tildropdownChannel.error = "Role is required"
+                binding.tildropdownChannel.boxStrokeColor = getColor(R.color.maroon)
                 return@setOnClickListener
             }  else {
                 binding.tiluserID.error = null
                 binding.tilPassword.error = null
                 binding.tilrepassword.error = null
-                binding.tildropdown.error = null
+                binding.tildropdownRole.error = null
+                binding.tildropdownChannel.error = null
                 val username = binding.tietUserId.text.toString()
                 val password = binding.tietrepassword.text.toString()
-                val user = User(username, password, true, channel)
+                val user = User(username, password, true, roleID,channel)
                 viewmodel.users(SessionManager(this).getAccessToken().toString(), user)
             }
         }
@@ -131,11 +138,10 @@ class RegisterActivity : AppCompatActivity() {
                             items.add(it)
                         }
                         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, items.map { it?.name })
-                        binding.dropdownRole.setAdapter(adapter)
-                        binding.dropdownRole.setOnItemClickListener { parent, view, position, id ->
+                        binding.dropdownChannel.setAdapter(adapter)
+                        binding.dropdownChannel.setOnItemClickListener { parent, view, position, id ->
                             val selectedId = items[position]?.id
-                            val channelId = Channel(selectedId)
-                            channel.add(channelId)
+                            selectedId?.let { element -> channel.add(element) }
                         }
                     }
                     is ApiResult.Error -> {
@@ -146,11 +152,26 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
+    private fun setupRole() {
+        val item = listOf(
+            Role(1, "Admin"),
+            Role(2, "Operator")
+        )
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, item.map { it.name })
+        binding.dropdownRole.setAdapter(adapter)
+        binding.dropdownRole.setOnItemClickListener { parent, view, position, id ->
+            val selectedId = item[position].id
+            roleID = selectedId
+        }
+    }
+
     private fun setupEditText() {
         setupTextInput(binding.tiluserID, binding.tietUserId)
         setupTextInput(binding.tilPassword, binding.tiePassword)
         setupTextInput(binding.tilrepassword, binding.tietrepassword)
-        setupTextInput(binding.tildropdown, binding.tietUserId)
+        setupTextInput(binding.tildropdownRole, binding.tietUserId)
+        setupTextInput(binding.tildropdownChannel, binding.tietUserId)
     }
 
     private fun setupTextInput(textInputLayout: TextInputLayout, textInputEditText: TextInputEditText) {

@@ -59,7 +59,7 @@ class StreamActivity : AppCompatActivity() {
                                 Intent(
                                     applicationContext,
                                     HomeActivity::class.java
-                                )
+                                ).putExtra("id_s", it.data.data?.id)
                             )
                             this@StreamActivity.finish()
                             sessionManager.saveToken(it.data.data?.accessToken.toString(), "")

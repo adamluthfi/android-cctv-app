@@ -2,13 +2,22 @@ package com.app.stream.module.cctv
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.HttpDataSource
+import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -77,13 +86,6 @@ class CctvActivity : AppCompatActivity() {
         player.release()
     }
 
-    override fun onResume() {
-        super.onResume()
-        fetchCamera()
-        player.playWhenReady = true
-        player.prepare()
-    }
-
     private fun fetchCamera() {
         viewmodel.cctvState
             .observe(this@CctvActivity) {
@@ -131,10 +133,14 @@ class CctvActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun setupLiveStream(url: String) {
+        val renderersFactory = DefaultRenderersFactory(applicationContext)
+            .setEnableDecoderFallback(true)
+            .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
         playerView = binding.playerPreview
         player = ExoPlayer
-            .Builder(this)
+            .Builder(this, renderersFactory)
             .build()
         playerView.player = player
 
@@ -142,6 +148,28 @@ class CctvActivity : AppCompatActivity() {
         player.setMediaItem(mediaStream)
         player.playWhenReady = true
         player.prepare()
+        player.addListener(object : Player.Listener {
 
+            override fun onPlayerError(error: PlaybackException) {
+                val cause = error.cause
+                if (cause is HttpDataSource.InvalidResponseCodeException) {
+                    if (cause.responseCode == 404) {
+                        Log.e("PLAYER", "Stream not found (404)")
+                        // Tampilkanlast frame
+                        playerView.setKeepContentOnPlayerReset(true)
+                        // Retry setelah delay
+                        retryStream()
+                    }
+                }
+            }
+        })
+
+    }
+
+    private fun retryStream() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            player.prepare()
+            player.playWhenReady = true
+        }, 3000)
     }
 }

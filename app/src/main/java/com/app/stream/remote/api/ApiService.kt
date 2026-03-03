@@ -63,6 +63,11 @@ interface ApiService {
         @Header("Authorization") token: String,
     ): ChannelsApiResponse
 
+    @GET("channels/user")
+    suspend fun getChannelUsers(
+        @Header("Authorization") token: String,
+    ): ChannelsApiResponse
+
     @PUT("channels/{channelId}/cameras")
     suspend fun updateChannelCamera(
         @Path("channelId") id: Long,

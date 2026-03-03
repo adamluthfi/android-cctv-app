@@ -2,11 +2,15 @@ package com.app.stream.module.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.SystemClock
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.stream.R
 import com.app.stream.common.SessionManager
@@ -20,6 +24,15 @@ import com.app.stream.remote.ApiResult
 import com.app.stream.remote.model.ChannelCameraResponse
 import com.app.stream.ui.common.loading.LoadingController
 import com.app.stream.ui.common.loading.LoadingManager
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable.isActive
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 class HomeActivity : AppCompatActivity() {
 
@@ -30,13 +43,24 @@ class HomeActivity : AppCompatActivity() {
     private val viewmodel = HomeViewModel()
     private lateinit var loadingController: LoadingController
 
+    private var idS: Long? = null
+
+    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var runnable: Runnable
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
         loadingController = LoadingManager(supportFragmentManager)
         setupButton()
-        viewmodel.channels(SessionManager(this).getAccessToken().toString())
+        idS = intent.getLongExtra("id_s", 0)
+        if (idS?.toInt() == 1) {
+            viewmodel.channels(SessionManager(this).getAccessToken().toString())
+        } else {
+            viewmodel.channelUsers(SessionManager(this).getAccessToken().toString())
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -52,6 +76,16 @@ class HomeActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         loadingController.hide()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        startClock()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopClock()
     }
 
     private fun setupListCamera(channels: List<ChannelCameraResponse>?) {
@@ -107,5 +141,21 @@ class HomeActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+
+    private fun startClock() {
+        runnable = object : Runnable {
+            override fun run() {
+                val time = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+                    .format(Date())
+                binding.tvTime.text = time
+                handler.postDelayed(this, 1000)
+            }
+        }
+        handler.post(runnable)
+    }
+
+    private fun stopClock() {
+        handler.removeCallbacks(runnable)
     }
 }

@@ -23,4 +23,20 @@ class HomeRepository(
             ApiResult.Error(e.message ?: "Network error")
         }
     }
+
+    suspend fun channelUsers(token: String): ApiResult<ChannelsApiResponse> {
+        return try {
+            val response = api.getChannelUsers(token = "Bearer $token")
+            if (response.status == 200) {
+                ApiResult.Success(response)
+            } else {
+                ApiResult.Error(
+                    response.message ?: "get channels failed",
+                    response.status
+                )
+            }
+        } catch (e: Exception) {
+            ApiResult.Error(e.message ?: "Network error")
+        }
+    }
 }

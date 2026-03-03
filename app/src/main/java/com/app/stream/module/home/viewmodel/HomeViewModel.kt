@@ -21,4 +21,11 @@ class HomeViewModel: ViewModel() {
             _homeState.value = repository.channels(token)
         }
     }
+
+    fun channelUsers(token: String) {
+        viewModelScope.launch {
+            _homeState.value = ApiResult.Loading
+            _homeState.value = repository.channelUsers(token)
+        }
+    }
 }

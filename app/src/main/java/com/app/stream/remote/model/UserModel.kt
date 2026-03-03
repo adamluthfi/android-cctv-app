@@ -20,7 +20,8 @@ data class User(
     val username: String?,
     val password: String?,
     val enabled: Boolean?,
-    val channels: List<Channel>?
+    val roleId: Long?,
+    val channelIds: List<Long>?
 )
 
 data class UserChannelResponse(
