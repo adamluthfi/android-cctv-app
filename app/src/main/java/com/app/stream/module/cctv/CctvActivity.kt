@@ -29,6 +29,10 @@ class CctvActivity : AppCompatActivity() {
     private lateinit var player: ExoPlayer
     private lateinit var playerView: PlayerView
 
+    private var url: String? = null
+    private var nameCamera: String? = null
+
+
     private val binding: ActivityCctvBinding by lazy {
         ActivityCctvBinding.inflate(layoutInflater)
     }
@@ -46,6 +50,7 @@ class CctvActivity : AppCompatActivity() {
             intent.getLongExtra("channel_id",0)
         )
         fetchCamera()
+        setupFullScreen()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -72,6 +77,13 @@ class CctvActivity : AppCompatActivity() {
         player.release()
     }
 
+    override fun onResume() {
+        super.onResume()
+        fetchCamera()
+        player.playWhenReady = true
+        player.prepare()
+    }
+
     private fun fetchCamera() {
         viewmodel.cctvState
             .observe(this@CctvActivity) {
@@ -80,7 +92,8 @@ class CctvActivity : AppCompatActivity() {
                     is ApiResult.Success -> {
                         it.data.data
                         setupListCamera(it.data.data)
-                        val url = it.data.data?.first()?.url
+                        url = it.data.data?.first()?.url
+                        nameCamera = it.data.data?.first()?.name
                         url?.let { it1 -> setupLiveStream(it1) }
                     }
                     is ApiResult.Error -> {
@@ -93,12 +106,28 @@ class CctvActivity : AppCompatActivity() {
     private fun setupListCamera(cameras: List<Camera>?) {
 
         val adapter = CameraAdapter(cameras) { camera ->
-            camera.url?.let { setupLiveStream(it) }
+            camera.url?.let {
+                setupLiveStream(it)
+                url = it
+            }
+            camera.name.let {
+                nameCamera = it
+            }
+
         }
 
         binding.rvCCTV.apply {
             layoutManager = LinearLayoutManager(this@CctvActivity)
             this.adapter = adapter
+        }
+    }
+
+    private fun setupFullScreen() {
+        binding.btnFullScreen.setOnClickListener {
+            this@CctvActivity.startActivitySlideRight(
+                Intent(this@CctvActivity, DetailActivity::class.java)
+                    .putExtra("url", url)
+                    .putExtra("name_camera", nameCamera))
         }
     }
 

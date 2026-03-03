@@ -61,18 +61,10 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/tvCameraLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Building A - Floor 1"
-                android:textSize="12sp"
-                android:textColor="#CCCCCC"/>
-
-            <TextView
                 android:id="@+id/tvCameraStatus"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="● Online  •  #CAM001"
+                android:text="● Online"
                 android:textSize="12sp"
                 android:textColor="#7CFF7C"/>
         </LinearLayout>

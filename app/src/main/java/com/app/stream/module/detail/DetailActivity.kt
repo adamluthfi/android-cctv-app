@@ -60,11 +60,11 @@ class DetailActivity : AppCompatActivity() {
             .build()
         playerView.player = player
 
-        val mediaStream = MediaItem.fromUri(intent.getStringExtra("camera_url").toString())
+        val mediaStream = MediaItem.fromUri(intent.getStringExtra("url").toString())
         player.setMediaItem(mediaStream)
         player.playWhenReady = true
         player.prepare()
-
+        binding.tvCameraName.text = intent.getStringExtra("name_camera").toString()
     }
 
     private fun setupButton() {

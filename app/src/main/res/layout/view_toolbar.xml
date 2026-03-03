@@ -12,7 +12,6 @@
         android:id="@+id/iconContainer"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:background="@drawable/bg_toolbar_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -21,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/ic_camera" />
+            android:src="@drawable/logo_bnpp" />
     </FrameLayout>
 
     <!-- Title -->
