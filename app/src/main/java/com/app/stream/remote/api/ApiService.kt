@@ -19,6 +19,7 @@ import com.app.stream.remote.model.UserListResponse
 import com.app.stream.remote.model.UsersApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -55,6 +56,12 @@ interface ApiService {
     suspend fun updateUser(
         @Path("id") id: Long,
         @Body request: UpdateUserRequest
+    ): UserApiResponse
+
+    @DELETE("users/{id}")
+    suspend fun deleteUser(
+        @Path("id") id: Int?,
+        @Header("Authorization") token: String,
     ): UserApiResponse
 
     // ROLE

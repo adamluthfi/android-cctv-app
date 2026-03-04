@@ -25,6 +25,7 @@ import com.app.stream.remote.ApiResult
 import com.app.stream.remote.model.ChannelCameraResponse
 import com.app.stream.ui.common.loading.LoadingController
 import com.app.stream.ui.common.loading.LoadingManager
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable.isActive
 import kotlinx.coroutines.delay
@@ -126,7 +127,7 @@ class HomeActivity : AppCompatActivity() {
                     }
                     is ApiResult.Error -> {
                         loadingController.hide()
-                        Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, it.message.toString(), Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -1,25 +1,31 @@
 package com.app.stream.module.settings.users
 
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.app.stream.R
 import com.app.stream.common.SessionManager
-import com.app.stream.common.adapter.CameraAdapter
+import com.app.stream.common.SwipeToDeleteCallback
 import com.app.stream.common.adapter.UsersAdapter
 import com.app.stream.databinding.ActivityUserBinding
-import com.app.stream.module.settings.registration.viewmodel.RegistrationViewModel
 import com.app.stream.module.settings.users.viewmodel.UserViewModel
 import com.app.stream.remote.ApiResult
-import com.app.stream.remote.model.Camera
 import com.app.stream.remote.model.UserListResponse
 import com.app.stream.ui.common.loading.LoadingController
 import com.app.stream.ui.common.loading.LoadingManager
+import com.google.android.material.snackbar.Snackbar
 import kotlin.getValue
 
 class UserActivity : AppCompatActivity() {
@@ -57,17 +63,35 @@ class UserActivity : AppCompatActivity() {
                     }
                     is ApiResult.Success -> {
                         loadingController.hide()
-                        setupListUser(it.data.data)
+                        setupListUser(it.data.data?.toMutableList())
                     }
                     is ApiResult.Error -> {
                         loadingController.hide()
-                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, it.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
     }
 
-    private fun setupListUser(users: List<UserListResponse>?) {
+    private fun deleteUser() {
+        viewmodel.deleteState
+            .observe(this@UserActivity) { it ->
+                when (it) {
+                    is ApiResult.Loading -> {
+                        loadingController.show("Loading...")
+                    }
+                    is ApiResult.Success -> {
+                        loadingController.hide()
+                    }
+                    is ApiResult.Error -> {
+                        loadingController.hide()
+                        Snackbar.make(binding.root, it.message, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            }
+    }
+
+    private fun setupListUser(users: MutableList<UserListResponse>?) {
 
         val adapter = UsersAdapter(users) { camera -> }
         binding.rvUser.itemAnimator = DefaultItemAnimator().apply {
@@ -79,6 +103,17 @@ class UserActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@UserActivity)
             this.adapter = adapter
         }
+
+        val swipeHandler = SwipeToDeleteCallback(applicationContext) { position ->
+
+            val deletedItem = adapter.items?.get(position)
+            adapter.deleteItem(position)
+            viewmodel.deleteUser(deletedItem?.id, SessionManager(this).getAccessToken().toString())
+            deleteUser()
+            Snackbar.make(binding.root, "User deleted", Snackbar.LENGTH_LONG).show()
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(binding.rvUser)
     }
 
     private fun setupAction() {

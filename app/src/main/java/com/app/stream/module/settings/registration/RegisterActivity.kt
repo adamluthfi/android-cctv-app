@@ -20,6 +20,7 @@ import com.app.stream.remote.model.Role
 import com.app.stream.remote.model.User
 import com.app.stream.ui.common.loading.LoadingController
 import com.app.stream.ui.common.loading.LoadingManager
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlin.getValue
@@ -56,11 +57,11 @@ class RegisterActivity : AppCompatActivity() {
                     is ApiResult.Success -> {
                         loadingController.hide()
                         this@RegisterActivity.finish()
-                        Toast.makeText(this, it.data.message.toString(), Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, it.data.message.toString(), Snackbar.LENGTH_SHORT).show()
                     }
                     is ApiResult.Error -> {
                         loadingController.hide()
-                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, it.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -145,7 +146,7 @@ class RegisterActivity : AppCompatActivity() {
                     }
                     is ApiResult.Error -> {
                         loadingController.hide()
-                        Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, it.message.toString(), Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }

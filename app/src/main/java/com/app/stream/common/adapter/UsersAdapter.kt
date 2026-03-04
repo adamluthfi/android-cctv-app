@@ -8,7 +8,7 @@ import com.app.stream.databinding.ItemNameLocationBinding
 import com.app.stream.remote.model.ChannelCameraResponse
 import com.app.stream.remote.model.UserListResponse
 
-class UsersAdapter (private val items: List<UserListResponse>?,
+class UsersAdapter (val items: MutableList<UserListResponse>?,
                     private val onClick: (UserListResponse) -> Unit
 ) : RecyclerView.Adapter<UsersAdapter.UsersViewHolder>() {
 
@@ -19,25 +19,6 @@ class UsersAdapter (private val items: List<UserListResponse>?,
         fun bind(item: UserListResponse?) = with(binding) {
             tvLocationName.text = item?.username
             tvCameraCount.text = item?.role?.name
-
-//            root.setOnClickListener { view ->
-//                // 🔥 Animation
-//                view.animate()
-//                    .scaleX(0.96f)
-//                    .scaleY(0.96f)
-//                    .setInterpolator(FastOutSlowInInterpolator())
-//                    .setDuration(120)
-//                    .withEndAction {
-//                        view.animate()
-//                            .scaleX(1f)
-//                            .scaleY(1f)
-//                            .setDuration(120)
-//                            .start()
-//
-//                        // 🔥 Trigger click AFTER animation
-//                        item?.let { onClick(it) }
-//                    }.start()
-//            }
         }
     }
 
@@ -58,4 +39,9 @@ class UsersAdapter (private val items: List<UserListResponse>?,
     }
 
     override fun getItemCount(): Int = items?.size ?: 0
+
+    fun deleteItem(position: Int) {
+        items?.removeAt(position)
+        notifyItemRemoved(position)
+    }
 }

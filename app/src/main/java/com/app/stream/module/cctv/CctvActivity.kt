@@ -33,6 +33,7 @@ import com.app.stream.module.home.viewmodel.HomeViewModel
 import com.app.stream.remote.ApiResult
 import com.app.stream.remote.model.Camera
 import com.app.stream.remote.model.CameraResponse
+import com.google.android.material.snackbar.Snackbar
 
 class CctvActivity : AppCompatActivity() {
 
@@ -100,7 +101,7 @@ class CctvActivity : AppCompatActivity() {
                         url?.let { it1 -> setupLiveStream(it1) }
                     }
                     is ApiResult.Error -> {
-                        Toast.makeText(this, it.message.toString(), Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, it.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }

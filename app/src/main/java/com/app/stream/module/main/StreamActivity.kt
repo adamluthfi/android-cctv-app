@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.Snackbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,7 @@ import com.app.stream.databinding.ActivityStreamBinding
 import com.app.stream.module.home.HomeActivity
 import com.app.stream.remote.ApiResult
 import com.app.stream.module.main.viewmodel.StreamViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.delay
@@ -66,7 +68,7 @@ class StreamActivity : AppCompatActivity() {
                     }
                     is ApiResult.Error -> {
                         binding.btnSignIn.hideLoading("SIGN IN")
-                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, it.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }

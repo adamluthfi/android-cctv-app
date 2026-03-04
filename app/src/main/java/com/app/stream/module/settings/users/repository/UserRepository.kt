@@ -3,6 +3,7 @@ package com.app.stream.module.settings.users.repository
 import com.app.stream.remote.ApiResult
 import com.app.stream.remote.NetworkModule
 import com.app.stream.remote.api.ApiService
+import com.app.stream.remote.model.UserApiResponse
 import com.app.stream.remote.model.UserListApiResponse
 
 class UserRepository(
@@ -13,6 +14,25 @@ class UserRepository(
     ): ApiResult<UserListApiResponse> {
         return try {
             val response = api.getUsers("Bearer $token")
+            if (response.status == 200) {
+                ApiResult.Success(response)
+            } else {
+                ApiResult.Error(
+                    response.message ?: "create user failed",
+                    response.status
+                )
+            }
+        } catch (e: Exception) {
+            ApiResult.Error(e.message ?: "Network error")
+        }
+    }
+
+    suspend fun deleteUsers(
+        idS: Int?,
+        token: String
+    ): ApiResult<UserApiResponse> {
+        return try {
+            val response = api.deleteUser(idS,"Bearer $token")
             if (response.status == 200) {
                 ApiResult.Success(response)
             } else {
