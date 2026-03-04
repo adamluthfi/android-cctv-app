@@ -14,6 +14,8 @@ import com.app.stream.remote.model.TokenResponse
 import com.app.stream.remote.model.UpdateUserRequest
 import com.app.stream.remote.model.User
 import com.app.stream.remote.model.UserApiResponse
+import com.app.stream.remote.model.UserListApiResponse
+import com.app.stream.remote.model.UserListResponse
 import com.app.stream.remote.model.UsersApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -38,14 +40,16 @@ interface ApiService {
     ): TokenApiResponse
 
     // USER
-    @GET("users")
-    suspend fun getUsers(): UsersApiResponse
-
     @POST("users")
     suspend fun createUser(
         @Header("Authorization") token: String,
         @Body request: User
     ): UserApiResponse
+
+    @GET("users")
+    suspend fun getUsers(
+        @Header("Authorization") token: String,
+    ): UserListApiResponse
 
     @PUT("users/{id}")
     suspend fun updateUser(

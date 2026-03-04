@@ -82,6 +82,9 @@
                 android:id="@+id/changePassword"/>
 
             <include layout="@layout/item_setting"
+                android:id="@+id/user"/>
+
+            <include layout="@layout/item_setting"
                 android:id="@+id/tnc"/>
         </LinearLayout>
     </ScrollView>

@@ -29,3 +29,14 @@ data class UserChannelResponse(
     val name: String?,
     val cameras: List<ChannelResponse>?
 )
+
+data class UserListResponse(
+    val id: Int,
+    val username: String,
+    val enabled: Boolean,
+    val createdBy: String,
+    val createdAt: String,
+    val updatedAt: String,
+    val role: Role,
+    val channels: List<Channel>
+)

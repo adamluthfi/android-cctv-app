@@ -17,6 +17,9 @@
         android:theme="@style/Theme.StreamApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".module.settings.users.UserActivity"
+            android:exported="false" />
+        <activity
             android:name=".module.settings.tnc.TncActivity"
             android:exported="false" />
         <activity

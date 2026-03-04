@@ -17,7 +17,11 @@ class LocationAdapter (private val items: List<ChannelCameraResponse>?,
 
         fun bind(item: ChannelCameraResponse?) = with(binding) {
             tvLocationName.text = item?.name
-            tvCameraCount.text = "${item?.cameras?.count()} Kamera"
+            if (item?.cameras == null) {
+                tvCameraCount.text = "6 Kamera"
+            } else {
+                tvCameraCount.text = "${item?.cameras?.count()} Kamera"
+            }
 
             root.setOnClickListener { view ->
                 // 🔥 Animation

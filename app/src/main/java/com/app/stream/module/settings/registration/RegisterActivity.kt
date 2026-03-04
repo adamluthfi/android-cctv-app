@@ -31,8 +31,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private val viewmodel = RegistrationViewModel()
     private val channel = mutableListOf<Long>()
+    private val items = mutableListOf<ChannelCameraResponse?>()
     private var roleID: Long? = null
-
     private lateinit var loadingController: LoadingController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +106,7 @@ class RegisterActivity : AppCompatActivity() {
                 binding.tildropdownRole.error = "Role is required"
                 binding.tildropdownRole.boxStrokeColor = getColor(R.color.maroon)
                 return@setOnClickListener
-            } else if (binding.dropdownChannel.text.isEmpty()) {
+            } else if (binding.dropdownChannel.text.isEmpty() && binding.dropdownRole.text.toString() != "User") {
                 binding.tildropdownChannel.error = "Role is required"
                 binding.tildropdownChannel.boxStrokeColor = getColor(R.color.maroon)
                 return@setOnClickListener
@@ -125,7 +125,6 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setListDropDown() {
-        val items = mutableListOf<ChannelCameraResponse?>()
         viewmodel.channelState
             .observe(this@RegisterActivity) { it ->
                 when (it) {
@@ -155,6 +154,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun setupRole() {
         val item = listOf(
             Role(1, "Admin"),
+            Role(2, "User"),
             Role(2, "Operator")
         )
 
@@ -163,6 +163,13 @@ class RegisterActivity : AppCompatActivity() {
         binding.dropdownRole.setOnItemClickListener { parent, view, position, id ->
             val selectedId = item[position].id
             roleID = selectedId
+            item[position].takeIf { it.name == "User" }.let {
+                binding.dropdownChannel.isEnabled = false
+                binding.tildropdownChannel.hint = "All Channel"
+                items.forEach {
+                    it?.id?.let { element -> channel.add(element) }
+                }
+            }
         }
     }
 

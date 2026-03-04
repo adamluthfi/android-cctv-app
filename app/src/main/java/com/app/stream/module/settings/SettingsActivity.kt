@@ -16,6 +16,7 @@ import com.app.stream.module.main.StreamActivity
 import com.app.stream.module.settings.password.PasswordActivity
 import com.app.stream.module.settings.registration.RegisterActivity
 import com.app.stream.module.settings.tnc.TncActivity
+import com.app.stream.module.settings.users.UserActivity
 import kotlin.jvm.java
 
 class SettingsActivity : AppCompatActivity() {
@@ -75,6 +76,11 @@ class SettingsActivity : AppCompatActivity() {
                 PasswordActivity::class.java))
         }
 
+        binding.user.mainItemSetting.setOnClickListener {
+            this@SettingsActivity.startActivitySlideRight(Intent(this@SettingsActivity,
+                UserActivity::class.java))
+        }
+
         binding.tnc.mainItemSetting.setOnClickListener {
             this@SettingsActivity.startActivitySlideRight(Intent(this@SettingsActivity,
                 TncActivity::class.java))
@@ -88,7 +94,7 @@ class SettingsActivity : AppCompatActivity() {
         item1.findViewById<TextView>(R.id.title)
             .text = "Users"
         item1.findViewById<TextView>(R.id.subtitle)
-            .text = "Edit users"
+            .text = "Add users"
 
         val item2 = findViewById<View>(R.id.changePassword)
         item2.findViewById<ImageView>(R.id.icon)
@@ -98,12 +104,20 @@ class SettingsActivity : AppCompatActivity() {
         item2.findViewById<TextView>(R.id.subtitle)
             .text = "Change password"
 
-        val item3 = findViewById<View>(R.id.tnc)
+        val item3 = findViewById<View>(R.id.user)
         item3.findViewById<ImageView>(R.id.icon)
-            .setImageResource(R.drawable.ic_settings)
+            .setImageResource(R.drawable.id_card)
         item3.findViewById<TextView>(R.id.title)
-            .text = "Settings"
+            .text = "List Users"
         item3.findViewById<TextView>(R.id.subtitle)
+            .text = "Edit users"
+
+        val item4 = findViewById<View>(R.id.tnc)
+        item4.findViewById<ImageView>(R.id.icon)
+            .setImageResource(R.drawable.ic_settings)
+        item4.findViewById<TextView>(R.id.title)
+            .text = "Settings"
+        item4.findViewById<TextView>(R.id.subtitle)
             .text = "Term & Condition"
     }
 }

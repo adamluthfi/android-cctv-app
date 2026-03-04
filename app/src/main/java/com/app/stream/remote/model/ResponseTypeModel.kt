@@ -5,8 +5,8 @@ typealias TokenApiResponse = BaseResponse<TokenResponse>
 
 typealias UserApiResponse = BaseResponse<UserResponse>
 typealias UsersApiResponse = BaseResponse<List<UserResponse>>
+typealias UserListApiResponse = BaseResponse<List<UserListResponse>>
 
-typealias RoleApiResponse = BaseResponse<RoleResponse>
 typealias RolesApiResponse = BaseResponse<List<RoleResponse>>
 
 typealias PermissionApiResponse = BaseResponse<List<Permission>>
