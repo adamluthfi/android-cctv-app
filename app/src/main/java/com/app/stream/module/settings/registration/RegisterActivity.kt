@@ -95,6 +95,10 @@ class RegisterActivity : AppCompatActivity() {
                 binding.tilPassword.error = "Password is required"
                 binding.tilPassword.boxStrokeColor = getColor(R.color.maroon)
                 return@setOnClickListener
+            } else if ((binding.tiePassword.text?.length ?: 0) < 8) {
+                binding.tilPassword.error = "Password is minimum 8 characters"
+                binding.tilPassword.boxStrokeColor = getColor(R.color.maroon)
+                return@setOnClickListener
             } else if (binding.tietrepassword.text?.isEmpty() == true) {
                 binding.tilrepassword.error = "Confirm password is required"
                 binding.tilrepassword.boxStrokeColor = getColor(R.color.maroon)
@@ -111,7 +115,7 @@ class RegisterActivity : AppCompatActivity() {
                 binding.tildropdownChannel.error = "Role is required"
                 binding.tildropdownChannel.boxStrokeColor = getColor(R.color.maroon)
                 return@setOnClickListener
-            }  else {
+            } else {
                 binding.tiluserID.error = null
                 binding.tilPassword.error = null
                 binding.tilrepassword.error = null
