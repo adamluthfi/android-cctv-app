@@ -55,7 +55,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="18dp"
                     android:id="@+id/txtName"
                     android:text="@string/john_doe"
                     android:textColor="@android:color/white"
@@ -64,15 +64,6 @@
                     app:layout_constraintStart_toEndOf="@id/imgAvatar"
                     app:layout_constraintTop_toTopOf="@id/imgAvatar"
                     android:layout_marginStart="12dp"/>
-
-                <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/admin"
-                    android:textColor="#AAAAAA"
-                    android:textSize="13sp"
-                    app:layout_constraintStart_toStartOf="@id/txtName"
-                    app:layout_constraintTop_toBottomOf="@id/txtName"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- SECTION -->

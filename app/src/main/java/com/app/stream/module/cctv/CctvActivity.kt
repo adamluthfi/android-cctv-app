@@ -20,6 +20,7 @@ import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.stream.R
 import com.app.stream.common.SessionManager
@@ -117,7 +118,11 @@ class CctvActivity : AppCompatActivity() {
             }
 
         }
-
+        binding.rvCCTV.itemAnimator = DefaultItemAnimator().apply {
+            addDuration = 200
+            removeDuration = 200
+            moveDuration = 200
+        }
         binding.rvCCTV.apply {
             layoutManager = LinearLayoutManager(this@CctvActivity)
             this.adapter = adapter

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.stream.databinding.ItemNameLocationBinding
 import com.app.stream.remote.model.ChannelCameraResponse
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 class LocationAdapter (private val items: List<ChannelCameraResponse>?,
                        private val onClick: (ChannelCameraResponse) -> Unit
@@ -17,7 +18,25 @@ class LocationAdapter (private val items: List<ChannelCameraResponse>?,
         fun bind(item: ChannelCameraResponse?) = with(binding) {
             tvLocationName.text = item?.name
             tvCameraCount.text = "${item?.cameras?.count()} Kamera"
-            root.setOnClickListener { item?.let { p1 -> onClick(p1) } }
+
+            root.setOnClickListener { view ->
+                // 🔥 Animation
+                view.animate()
+                    .scaleX(0.96f)
+                    .scaleY(0.96f)
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .setDuration(120)
+                    .withEndAction {
+                        view.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(120)
+                            .start()
+
+                        // 🔥 Trigger click AFTER animation
+                        item?.let { onClick(it) }
+                    }.start()
+            }
         }
     }
 
@@ -32,6 +51,8 @@ class LocationAdapter (private val items: List<ChannelCameraResponse>?,
 
 
     override fun onBindViewHolder(holder: LocationViewHolder, position: Int) {
+        holder.itemView.scaleX = 1f
+        holder.itemView.scaleY = 1f
         holder.bind(items?.get(position))
     }
 

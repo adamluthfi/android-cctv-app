@@ -2,6 +2,7 @@ package com.app.stream.common.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import com.app.stream.R
 import com.app.stream.databinding.ItemCameraBinding
@@ -19,21 +20,24 @@ class CameraAdapter(
         fun bind(item: Camera?) = with(binding) {
             tvCameraName.text = item?.name
             tvCameraLocation.text = ""
+            root.setOnClickListener { view ->
+                // 🔥 Animation
+                view.animate()
+                    .scaleX(0.96f)
+                    .scaleY(0.96f)
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .setDuration(120)
+                    .withEndAction {
+                        view.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(120)
+                            .start()
 
-            // Status
-//            if (item.isOnline) {
-//                tvCameraStatus.text = "● Online  •  ${item.id}"
-//                tvCameraStatus.setTextColor(Color.parseColor("#7CFF7C"))
-//            } else {
-//                tvCameraStatus.text = "● Offline  •  ${item.id}"
-//                tvCameraStatus.setTextColor(Color.parseColor("#FF6B6B"))
-//            }
-
-
-            // REC badge
-            //tvRec.visibility = if (item.isRecording) View.VISIBLE else View.GONE
-
-            root.setOnClickListener { item?.let { p1 -> onClick(p1) } }
+                        // 🔥 Trigger click AFTER animation
+                        item?.let { onClick(it) }
+                    }.start()
+            }
         }
     }
 

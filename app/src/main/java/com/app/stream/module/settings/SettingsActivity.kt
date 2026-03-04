@@ -15,12 +15,15 @@ import com.app.stream.common.extension.startActivitySlideRight
 import com.app.stream.module.main.StreamActivity
 import com.app.stream.module.settings.password.PasswordActivity
 import com.app.stream.module.settings.registration.RegisterActivity
+import com.app.stream.module.settings.tnc.TncActivity
 import kotlin.jvm.java
 
 class SettingsActivity : AppCompatActivity() {
     private val binding: ActivitySettingsBinding by lazy {
         ActivitySettingsBinding.inflate(layoutInflater)
     }
+    private var idS: Long? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,7 +32,12 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         setupButton()
         setupItemSettings()
-
+        binding.txtName.text = intent.getStringExtra("name")
+        idS = intent.getLongExtra("id_s", 0)
+        if (idS?.toInt() != 1) {
+            binding.changePassword.mainItemSetting.visibility = View.GONE
+            binding.editUser.mainItemSetting.visibility = View.GONE
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -65,6 +73,11 @@ class SettingsActivity : AppCompatActivity() {
         binding.changePassword.mainItemSetting.setOnClickListener {
             this@SettingsActivity.startActivitySlideRight(Intent(this@SettingsActivity,
                 PasswordActivity::class.java))
+        }
+
+        binding.tnc.mainItemSetting.setOnClickListener {
+            this@SettingsActivity.startActivitySlideRight(Intent(this@SettingsActivity,
+                TncActivity::class.java))
         }
     }
 

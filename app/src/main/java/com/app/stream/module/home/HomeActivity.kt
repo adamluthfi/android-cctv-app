@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.stream.R
 import com.app.stream.common.SessionManager
@@ -44,6 +45,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var loadingController: LoadingController
 
     private var idS: Long? = null
+    private var name: String? = null
 
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var runnable: Runnable
@@ -55,6 +57,8 @@ class HomeActivity : AppCompatActivity() {
         loadingController = LoadingManager(supportFragmentManager)
         setupButton()
         idS = intent.getLongExtra("id_s", 0)
+        name = intent.getStringExtra("name")
+        fetchCamera()
         if (idS?.toInt() == 1) {
             viewmodel.channels(SessionManager(this).getAccessToken().toString())
         } else {
@@ -97,6 +101,12 @@ class HomeActivity : AppCompatActivity() {
             )
         }
 
+        binding.rvCameras.itemAnimator = DefaultItemAnimator().apply {
+            addDuration = 200
+            removeDuration = 200
+            moveDuration = 200
+        }
+
         binding.rvCameras.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             this.adapter = adapter
@@ -131,10 +141,9 @@ class HomeActivity : AppCompatActivity() {
 
                 R.id.menu_settings -> {
                     this@HomeActivity.startActivitySlideRight(
-                        Intent(
-                            applicationContext,
-                            SettingsActivity::class.java
-                        )
+                        Intent(applicationContext, SettingsActivity::class.java)
+                            .putExtra("name", name)
+                            .putExtra("id_s", idS)
                     )
                     true
                 }

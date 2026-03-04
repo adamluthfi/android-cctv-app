@@ -56,10 +56,9 @@ class StreamActivity : AppCompatActivity() {
                             delay(200)
                             binding.btnSignIn.hideLoading("SIGN IN")
                             this@StreamActivity.startActivity(
-                                Intent(
-                                    applicationContext,
-                                    HomeActivity::class.java
-                                ).putExtra("id_s", it.data.data?.id)
+                                Intent(applicationContext, HomeActivity::class.java)
+                                    .putExtra("id_s", it.data.data?.id)
+                                    .putExtra("name", it.data.data?.username)
                             )
                             this@StreamActivity.finish()
                             sessionManager.saveToken(it.data.data?.accessToken.toString(), "")
