@@ -155,8 +155,8 @@ class RegisterActivity : AppCompatActivity() {
     private fun setupRole() {
         val item = listOf(
             Role(1, "Admin"),
-            Role(2, "User"),
-            Role(2, "Operator")
+            Role(2, "Operator"),
+            Role(3, "User")
         )
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, item.map { it.name })
@@ -164,12 +164,17 @@ class RegisterActivity : AppCompatActivity() {
         binding.dropdownRole.setOnItemClickListener { parent, view, position, id ->
             val selectedId = item[position].id
             roleID = selectedId
-            item[position].takeIf { it.name == "User" }.let {
+            val selectedName = item[position].name
+            if (selectedName.equals("User")) {
                 binding.dropdownChannel.isEnabled = false
                 binding.tildropdownChannel.hint = "All Channel"
                 items.forEach {
                     it?.id?.let { element -> channel.add(element) }
                 }
+            } else {
+                binding.dropdownChannel.isEnabled = true
+                binding.tildropdownChannel.hint = "Select Channel"
+                channel.clear()
             }
         }
     }

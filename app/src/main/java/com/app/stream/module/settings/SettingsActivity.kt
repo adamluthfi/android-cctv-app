@@ -38,6 +38,7 @@ class SettingsActivity : AppCompatActivity() {
         if (idS?.toInt() != 1) {
             binding.changePassword.mainItemSetting.visibility = View.GONE
             binding.editUser.mainItemSetting.visibility = View.GONE
+            binding.user.mainItemSetting.visibility = View.GONE
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
